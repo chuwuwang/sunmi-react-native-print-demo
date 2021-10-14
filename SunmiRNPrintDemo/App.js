@@ -1,14 +1,8 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import type {Node} from 'react';
 import {
+  Alert,
+  Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -26,32 +20,6 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-const Section = ({children, title}): Node => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -60,52 +28,62 @@ const App: () => Node = () => {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
+    <SafeAreaView>
+      <StatusBar
+        barStyle={'light-content'}
+        backgroundColor="#FF6900"
+        transparent="True"
+      />
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <Text style={styles.titleText}>SUNMI RN Print Demo</Text>
+
+        <Text style={styles.clickText} onPress={() => Alert.alert('xxxx')}>
+          Check Printer Status
+        </Text>
+        <Text style={styles.clickText} onPress={() => Alert.alert('xxxx')}>
+          Print Text
+        </Text>
+        <Text style={styles.clickText} onPress={() => Alert.alert('xxxx')}>
+          Print Image
+        </Text>
+        <Text style={styles.clickText} onPress={() => Alert.alert('xxxx')}>
+          Print Barcode
+        </Text>
+        <Text style={styles.clickText} onPress={() => Alert.alert('xxxx')}>
+          Print QRCode
+        </Text>
+        <Text style={styles.clickText} onPress={() => Alert.alert('xxxx')}>
+          Print Lines
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  titleText: {
+    height: 48,
+    fontSize: 16,
+    paddingLeft: 16,
+    color: 'white',
+    backgroundColor: '#FF6900',
+    textAlignVertical: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  clickText: {
+    height: 40,
+    fontSize: 12,
+    marginTop: 16,
+    marginEnd: 16,
+    marginStart: 16,
+    borderRadius: 4,
+    color: 'white',
+    textAlign: 'center',
+    backgroundColor: '#FF6900',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  transparent: {
+    color: '#transparent',
   },
 });
 
