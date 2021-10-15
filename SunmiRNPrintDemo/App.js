@@ -38,6 +38,9 @@ const App: () => Node = () => {
         <Text style={styles.titleText}>SUNMI RN Print Demo</Text>
         <Text style={styles.clickText} onPress={initPrinter}>Init Printer</Text>
         <Text style={styles.clickText} onPress={checkPrinterStatus}>Check Printer Status</Text>
+        <Text style={styles.clickText} onPress={reset}>Reset Printer Setting</Text>
+        <Text style={styles.clickText} onPress={setBold}>Set Text Bold</Text>
+        <Text style={styles.clickText} onPress={setFontSize}>Plus Text Font Size</Text>
         <Text style={styles.clickText} onPress={printText}>Print Text</Text>
         <Text style={styles.clickText} onPress={printImage}>Print Image</Text>
         <Text style={styles.clickText} onPress={printBarcode}>Print Barcode</Text>
@@ -81,9 +84,30 @@ const App: () => Node = () => {
     );
   }
 
+  function reset() {
+    SunmiPrintModule.reset(isSuccess => {
+        ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
+      }
+    );
+  }
+
+  function setBold() {
+    SunmiPrintModule.setBold(true, isSuccess => {
+        ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
+      }
+    );
+  }
+
+  function setFontSize() {
+    SunmiPrintModule.setFontSize(30, isSuccess => {
+        ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
+      }
+    );
+  }
+
   /**
    * The processing result returned by this Callback refers to the execution result of the command processing, not the processing result of printing out the paper.
-   * 该Callback返回处理结果是指命令处理执⾏结果，⽽不是打印出纸的处理结果。
+   * 该Callback返回处理结果是指命令处理执⾏结果, ⽽不是打印出纸的处理结果。
    */
   function printText() {
     SunmiPrintModule.printText("Create native apps for Android and iOS using React, React Native combines the best parts of native development with React, " + 
@@ -110,12 +134,47 @@ const App: () => Node = () => {
     );
   }
 
+  /**
+   * data - barcode data（⼀维码内容）
+   * symbology - barcode type（条码类型 0-8）:
+   *    0 - UPC-A
+   *    1 - UPC-E
+   *    2 - JAN13(EAN13)
+   *    3 - JAN8(EAN8)
+   *    4 - CODE39
+   *    5 - ITF
+   *    6 - CODABAR
+   *    7 - CODE93
+   *    8 - CODE128
+   * height - barcode height, value 1-255, default: 162（条码⾼度, 取值 1 - 255, 默认：162）
+   * width - barcode width, value 2-6, default: 2（条码宽度, 取值 2 - 6, 默认：2）
+   * textPosition - Text position (⽂字位置 0-3):
+   *    0 - Do not print text（不打印⽂字）
+   *    1 - The text is on the barcode（⽂字在条码上⽅）
+   *    2 - The text is under the barcode（⽂字在条码下⽅）
+   *    3 - Barcodes are printed up and down（条码上下⽅均打印）
+   */
   function printBarcode() {
-    Alert.alert('printBarcode');
+    SunmiPrintModule.printBarcode("1234567890", 8, 162, 2, 2, isSuccess => {
+        ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
+      }
+    );
   }
 
+  /**
+   * data - qrcode data（二维码数据）
+   * moduleSize - qrode block size, unit: point, value 4 to 16（QR码块⼤⼩, 单位:点, 取值 4 ⾄ 16）
+   * errorLevel - qrcode error correction level (⼆维码纠错等级 0-3)
+   *      0 - Error correction level L (纠错级别 L 7%)
+   *      1 - Error correction level M (纠错级别 M 15%)
+   *      2 - Error correction level Q (纠错级别 Q 25%)
+   *      3 - Error correction level H (纠错级别 H 30%)
+   */
   function printQRCode() {
-    Alert.alert('printQRCode');
+      SunmiPrintModule.printQRCode("SUNMI Tech.", 4, 3, isSuccess => {
+        ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
+      }
+    );
   }
 
   function printLine() {

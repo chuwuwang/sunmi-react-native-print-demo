@@ -97,11 +97,107 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void printBarcode(String data, int symbology, int height, int width, int textPosition, Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                printerService.printBarCode(data, symbology, height, width, textPosition, innerResultCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void printQRCode(String data, int moduleSize, int errorLevel, Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                printerService.printQRCode(data, moduleSize, errorLevel, innerResultCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
     public void printLine(int line, Callback callback) {
         try {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.lineWrap(line, innerResultCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void reset(Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                printerService.printerInit(innerResultCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void setBold(boolean bold, Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                byte[] returnText = new byte[3];
+                returnText[0] = 0x1B;
+                returnText[1] = 0x45;
+                if (bold) {
+                    returnText[2] = 0x01;
+                } else {
+                    returnText[2] = 0x00;
+                }
+                printerService.sendRAWData(returnText, innerResultCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void setHeight(int height, Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                byte[] returnText = new byte[3];
+                returnText[0] = 0x1B;
+                returnText[1] = 0x33;
+                returnText[2] = (byte) height;
+                printerService.sendRAWData(returnText, innerResultCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void setFontSize(int size, Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                printerService.setFontSize(size, innerResultCallback);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void setAlignment(int alignment, Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                printerService.setAlignment(alignment, innerResultCallback);
             }
         } catch (Exception e) {
             e.printStackTrace();
