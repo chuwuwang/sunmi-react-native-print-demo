@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Node } from 'react';
+import type {Node} from 'react';
 import {
   Alert,
   Image,
@@ -11,7 +11,6 @@ import {
   useColorScheme,
   ToastAndroid
 } from 'react-native';
-
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
@@ -38,14 +37,18 @@ const App: () => Node = () => {
         <Text style={styles.titleText}>SUNMI RN Print Demo</Text>
         <Text style={styles.clickText} onPress={initPrinter}>Init Printer</Text>
         <Text style={styles.clickText} onPress={checkPrinterStatus}>Check Printer Status</Text>
+
         <Text style={styles.clickText} onPress={reset}>Reset Printer Setting</Text>
         <Text style={styles.clickText} onPress={setBold}>Set Text Bold</Text>
         <Text style={styles.clickText} onPress={setFontSize}>Plus Text Font Size</Text>
+        <Text style={styles.clickText} onPress={setAlignment}>Set Text Alignment Center</Text>
+        
+        <Text style={styles.clickText} onPress={printLine}>Print Line</Text>
         <Text style={styles.clickText} onPress={printText}>Print Text</Text>
         <Text style={styles.clickText} onPress={printImage}>Print Image</Text>
-        <Text style={styles.clickText} onPress={printBarcode}>Print Barcode</Text>
+        <Text style={styles.clickText} onPress={printTable}>Print Table</Text>
         <Text style={styles.clickText} onPress={printQRCode}>Print QRCode</Text>
-        <Text style={styles.clickText} onPress={printLine}>Print Line</Text>
+        <Text style={styles.clickText} onPress={printBarcode}>Print Barcode</Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -65,6 +68,7 @@ const App: () => Node = () => {
   }
 
   /**
+   * Get printer status（获取打印机状态）
    * 1 - The printer works normally（打印机⼯作正常）
    * 2 - The printer is preparing（打印机准备中）
    * 3 - Abnormal communication（通讯异常）
@@ -84,6 +88,10 @@ const App: () => Node = () => {
     );
   }
 
+  /**
+   * Reset the printer logic program (for example: layout, bold and other style settings), but does not clear the data in the buffer area, so incomplete print jobs will continue after resetting.
+   * 重置打印机的逻辑程序（例如：排版, 加粗等样式设置）, 但不清空缓存区数据, 因此未完成的打印作业将在重置后继续。
+   */
   function reset() {
     SunmiPrintModule.reset(isSuccess => {
         ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
@@ -100,6 +108,20 @@ const App: () => Node = () => {
 
   function setFontSize() {
     SunmiPrintModule.setFontSize(30, isSuccess => {
+        ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
+      }
+    );
+  }
+
+  /**
+   * Set alignment mode（设置对齐模式）
+   * alignment - alignment mode（对⻬⽅式）
+   *    0 - left（居左）
+   *    1 - center（居中）
+   *    2 - right（居右）
+   */
+  function setAlignment() {
+    SunmiPrintModule.setAlignment(1, isSuccess => {
         ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
       }
     );
@@ -171,7 +193,18 @@ const App: () => Node = () => {
    *      3 - Error correction level H (纠错级别 H 30%)
    */
   function printQRCode() {
-      SunmiPrintModule.printQRCode("SUNMI Tech.", 4, 3, isSuccess => {
+    SunmiPrintModule.printQRCode("SUNMI Tech.", 4, 3, isSuccess => {
+        ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
+      }
+    );
+  }
+
+  function printTable() {
+    var colsAlign = [0, 0, 2];
+    var colsWidthArr = [2, 6, 3];
+    SunmiPrintModule.setFontSize(18, null);
+    var colsTextArr = ['x10', 'Pak Nasser’s Nasi Lemak (Combo) (RM3 Off Merdeka Special', 'MYR 17.00'];
+    SunmiPrintModule.printTable(colsTextArr, colsWidthArr, colsAlign, isSuccess => {
         ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
       }
     );

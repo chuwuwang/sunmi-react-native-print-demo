@@ -13,6 +13,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.sunmi.peripheral.printer.InnerPrinterCallback;
 import com.sunmi.peripheral.printer.InnerPrinterManager;
 import com.sunmi.peripheral.printer.InnerResultCallback;
@@ -65,9 +66,7 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (callback != null) {
-            callback.invoke(state);
-        }
+        returnCallback(callback, state);
     }
 
     @ReactMethod
@@ -76,9 +75,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.printText(text, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -90,9 +92,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.printBitmap(bitmap, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -102,9 +107,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.printBarCode(data, symbology, height, width, textPosition, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -114,9 +122,42 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.printQRCode(data, moduleSize, errorLevel, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
+        }
+    }
+
+    @ReactMethod
+    public void printTable(ReadableArray colsTextArr, ReadableArray colsWidthArr, ReadableArray colsAlignArr, Callback callback) {
+        try {
+            printResultCallback = callback;
+            if (printerService != null) {
+                int textSize = colsTextArr.size();
+                String[] colsTextArray = new String[textSize];
+                for (int i = 0; i < textSize; i++) {
+                    colsTextArray[i] = colsTextArr.getString(i);
+                }
+                int widthSize = colsWidthArr.size();
+                int[] colsWidthArray = new int[widthSize];
+                for (int i = 0; i < widthSize; i++) {
+                    colsWidthArray[i] = colsWidthArr.getInt(i);
+                }
+                int alignSize = colsAlignArr.size();
+                int[] colsAlignArray = new int[alignSize];
+                for (int i = 0; i < alignSize; i++) {
+                    colsAlignArray[i] = colsAlignArr.getInt(i);
+                }
+                printerService.printColumnsString(colsTextArray, colsWidthArray, colsAlignArray, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -126,9 +167,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.lineWrap(line, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -138,9 +182,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.printerInit(innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -158,9 +205,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
                     returnText[2] = 0x00;
                 }
                 printerService.sendRAWData(returnText, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -174,9 +224,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
                 returnText[1] = 0x33;
                 returnText[2] = (byte) height;
                 printerService.sendRAWData(returnText, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -186,9 +239,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.setFontSize(size, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
         }
     }
 
@@ -198,9 +254,18 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
             printResultCallback = callback;
             if (printerService != null) {
                 printerService.setAlignment(alignment, innerResultCallback);
+            } else {
+                returnCallback(callback, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            returnCallback(callback, false);
+        }
+    }
+
+    private void returnCallback(Callback callback, Object... args) {
+        if (callback != null) {
+            callback.invoke(args);
         }
     }
 
