@@ -6,7 +6,7 @@ SUNMI print demo for React Native.
 ```
 import SunmiPrintModule from './SunmiPrintModule';
 
- SunmiPrintModule.xxx
+SunmiPrintModule.xxx
 ```
 
 ## API
