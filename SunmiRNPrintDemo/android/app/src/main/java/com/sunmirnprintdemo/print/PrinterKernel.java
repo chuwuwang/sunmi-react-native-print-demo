@@ -311,8 +311,12 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
         @Override
         public void onRunResult(boolean isSuccess) throws RemoteException {
             Log.e(TAG, "onRunResult isSuccess: " + isSuccess);
-            if (printResultCallback != null) {
-                printResultCallback.invoke(isSuccess);
+            try {
+                if (printResultCallback != null) {
+                    printResultCallback.invoke(isSuccess);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -329,11 +333,15 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
         @Override
         public void onPrintResult(int code, String msg) throws RemoteException {
             Log.e(TAG, "onPrintResult code: " + code + " msg: " + msg);
-            if (printResultPromise != null) {
-                WritableMap map = Arguments.createMap();
-                map.putString("code", code + "");
-                map.putString("message", msg);
-                printResultPromise.resolve(map);
+            try {
+                if (printResultPromise != null) {
+                    WritableMap map = Arguments.createMap();
+                    map.putString("code", code + "");
+                    map.putString("message", msg);
+                    printResultPromise.resolve(map);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
