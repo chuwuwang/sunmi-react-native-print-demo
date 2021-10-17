@@ -8,12 +8,14 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.sunmi.peripheral.printer.InnerPrinterCallback;
 import com.sunmi.peripheral.printer.InnerPrinterManager;
 import com.sunmi.peripheral.printer.InnerResultCallback;
@@ -29,6 +31,7 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
     public SunmiPrinterService printerService;
 
     private Promise initPrinterPromise;
+    private Promise printResultPromise;
     private Callback printResultCallback;
 
     @NonNull
@@ -263,6 +266,40 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void enterPrinterBuffer() {
+        try {
+            if (printerService != null) {
+                printerService.enterPrinterBuffer(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ReactMethod
+    public void exitPrinterBuffer(Promise promise) {
+        try {
+            printResultPromise = promise;
+            if (printerService != null) {
+                if (promise != null) {
+                    printerService.exitPrinterBufferWithCallback(true, innerResultCallback);
+                } else {
+                    printerService.exitPrinterBuffer(true);
+                }
+            } else {
+                if (promise != null) {
+                    promise.reject("-1", "Print failure");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (promise != null) {
+                promise.reject("-1", "Print failure");
+            }
+        }
+    }
+
     private void returnCallback(Callback callback, Object... args) {
         if (callback != null) {
             callback.invoke(args);
@@ -292,8 +329,11 @@ public class PrinterKernel extends ReactContextBaseJavaModule {
         @Override
         public void onPrintResult(int code, String msg) throws RemoteException {
             Log.e(TAG, "onPrintResult code: " + code + " msg: " + msg);
-            if (printResultCallback != null) {
-                printResultCallback.invoke(code, msg);
+            if (printResultPromise != null) {
+                WritableMap map = Arguments.createMap();
+                map.putString("code", code + "");
+                map.putString("message", msg);
+                printResultPromise.resolve(map);
             }
         }
 

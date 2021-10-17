@@ -38,17 +38,24 @@ const App: () => Node = () => {
         <Text style={styles.clickText} onPress={initPrinter}>Init Printer</Text>
         <Text style={styles.clickText} onPress={checkPrinterStatus}>Check Printer Status</Text>
 
+        <Text/>
+
         <Text style={styles.clickText} onPress={reset}>Reset Printer Setting</Text>
         <Text style={styles.clickText} onPress={setBold}>Set Text Bold</Text>
         <Text style={styles.clickText} onPress={setFontSize}>Plus Text Font Size</Text>
         <Text style={styles.clickText} onPress={setAlignment}>Set Text Alignment Center</Text>
         
+        <Text/>
+
         <Text style={styles.clickText} onPress={printLine}>Print Line</Text>
         <Text style={styles.clickText} onPress={printText}>Print Text</Text>
         <Text style={styles.clickText} onPress={printImage}>Print Image</Text>
         <Text style={styles.clickText} onPress={printTable}>Print Table</Text>
         <Text style={styles.clickText} onPress={printQRCode}>Print QRCode</Text>
         <Text style={styles.clickText} onPress={printBarcode}>Print Barcode</Text>
+        <Text style={styles.clickText} onPress={printTransaction}>Transaction Print</Text>
+
+        <Text/>
       </ScrollView>
     </SafeAreaView>
   );
@@ -62,7 +69,7 @@ const App: () => Node = () => {
     )
     .catch(
       function(code, message) {
-        ToastAndroid.show(message + "(" + code + ")", ToastAndroid.SHORT);
+        ToastAndroid.show(message + " (" + code + ")", ToastAndroid.SHORT);
       }
     );
   }
@@ -215,6 +222,48 @@ const App: () => Node = () => {
         ToastAndroid.show("execution result: " + isSuccess, ToastAndroid.SHORT);
       }
     );
+  }
+
+  function enterPrinterBuffer() {
+    SunmiPrintModule.enterPrinterBuffer();
+  }
+
+  function exitPrinterBuffer() {
+    SunmiPrintModule.exitPrinterBuffer()
+    .then(
+      function(map) {
+        ToastAndroid.show(map.message + " (" + map.code + ")", ToastAndroid.SHORT);
+      }
+    )
+    .catch(
+      function(code, message) {
+        ToastAndroid.show(message + " (" + code + ")", ToastAndroid.SHORT);
+      }
+    );
+  }
+
+  function printTransaction() {
+    enterPrinterBuffer()
+    SunmiPrintModule.printLine(2, null)
+    SunmiPrintModule.printText("Create native apps for Android and iOS using React, React Native combines the best parts of native development with React, " + 
+    " a best-in-class JavaScript library for building user interfaces. Use a little—or a lot. You can use React Native today in your existing Android and " + 
+    "iOS projects or you can create a whole new app from scratch.\n", null)
+    SunmiPrintModule.printLine(1, null)
+    SunmiPrintModule.printQRCode("1234567890", 4, 3, null)
+    SunmiPrintModule.printLine(1, null)
+    SunmiPrintModule.printBarcode("1234567890", 8, 162, 2, 2, null)
+    SunmiPrintModule.printLine(1, null)
+    var colsAlign = [0, 0, 2];
+    var colsWidthArr = [2, 6, 3];
+    SunmiPrintModule.setFontSize(18, null);
+    var colsTextArr = ['x10', 'Pak Nasser’s Nasi Lemak (Combo) (RM3 Off Merdeka Special', 'MYR 17.00'];
+    SunmiPrintModule.printTable(colsTextArr, colsWidthArr, colsAlign, null)
+    SunmiPrintModule.printTable(colsTextArr, colsWidthArr, colsAlign, null)
+    SunmiPrintModule.printTable(colsTextArr, colsWidthArr, colsAlign, null)
+    SunmiPrintModule.printTable(colsTextArr, colsWidthArr, colsAlign, null)
+    SunmiPrintModule.printTable(colsTextArr, colsWidthArr, colsAlign, null)
+    SunmiPrintModule.printLine(4, null)
+    exitPrinterBuffer()
   }
 
 };
