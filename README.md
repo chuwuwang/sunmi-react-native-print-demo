@@ -1,6 +1,8 @@
 # sunmi-rn-print-demo
 SUNMI print demo for React Native.
 
+## [中文版本](https://github.com/chuwuwang/ReadingNote/wiki/SUNMI-%E6%89%93%E5%8D%B0-React-Native-%E7%89%88%E6%9C%AC)
+
 ## Quick Integration
 
 ```
@@ -43,7 +45,7 @@ Reset the printer logic program (for example: layout, bold and other style setti
 - Parameter
     - None
 - Return
-    - Callback, return a Boolean type instruction operation result.
+    - Callback, return a Bool type instruction operation result.
 
 ### 4. setBold()
 Set the font bold, the default is false.
@@ -159,4 +161,5 @@ Exit and commit the transaction to print.
 ## Remark
 
 This Demo is only suitable for SUNMI P series and V series products, not suitable for other products. If you have other requirements, please contact me.
+
 Email: chuwuwang@126.com
