@@ -79,6 +79,10 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
+    bundleAssetName: "index.android.bundle",
+    bundleInDebug: true,
+    bundleInAlpha: true,
+    bundleInBeta: true,
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -152,10 +156,16 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            keyAlias "ktx"
+            keyPassword "androidktx"
+            storePassword "androidktx"
+            storeFile file('../app/android-ktx.jks')
+        }
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             if (nativeArchitectures) {
                 ndk {
                     abiFilters nativeArchitectures.split(',')
@@ -165,7 +175,7 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
